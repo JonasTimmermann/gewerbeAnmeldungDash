@@ -1,0 +1,288 @@
+
+<div style="text-align:center">
+    <h3><b>Admin-Dashboard</b></h3>
+    <img width="200" src="/assets/img/kielStadtLogo.jpg">
+</div>    
+
+
+<br>
+<br>
+<!--(submit)="addKontaktData({vorname: vorname, nachname: nachname, age: age, street: street, city: city, state: state})"-->
+
+
+<form>
+    <div class="form-group">
+            <h2 style="color:rgb(255, 0, 0);">Frage:  </h2>
+            <br>
+            <input type="text" [(ngModel)]="frage.frage" name="frageID" class="form-control" id="frageid" aria-describedby="emailHelp" placeholder="Formular-Frage">
+           <!-- <small id="emailHelp" class="form-text text-muted">The One to delete</small> -->
+            <br> 
+            <br>
+            <br>
+    
+            <h2 style="color:rgb(255, 0, 0);" for="exampleInputEmail2">Kategorie: </h2>
+            <br>
+            <!-- <input type="text" [(ngModel)]="person.vorname" name="vornameID" class="form-control" id="vornameP" aria-describedby="emailHelp" placeholder="Dein Vorname">-->
+            <select class="form-control" [(ngModel)]="frage.kategorie" name="typKat">  <!--ng-options="item for item in names"-->
+                 <option *ngFor="let c of kat" [ngValue]="c.name" >{{c.name}}</option>
+            </select>
+            <br> 
+            <br> 
+            <br> 
+
+            <h2 for="exampleInputEmail2" style="color:rgb(255, 0, 0);">Antwort-Typ: </h2>
+            <select class="form-control" [(ngModel)]="frage.antwortTyp" (change)=" toggleEdit($event.target.value)" name="typ">  <!--ng-options="item for item in names"-->
+                <option *ngFor="let a of antwortMoeglichkeiten" [ngValue]="a.name" >{{a.name}}</option>
+           </select>
+           <!-- <p>Selected option: {{ selectedValue }}</p> -->
+
+            <br> 
+
+            <div *ngIf="radioOn">
+
+                <li *ngFor="let i of fakeArray; let index = index ">   
+                        <label style="color:rgb(37, 187, 0);">AntOp: {{index}}</label> 
+                         <input type="text" [(ngModel)]="realArray[index]" name="antOpID{{index}}" class="form-control" id="antOp{{index}}" aria-describedby="emailHelp" placeholder="Antwort-Option:{{index}}">
+                </li>
+
+                <button class="btn btn-outline-success" (click)="addInput()" >+</button>
+                <button class="btn btn-outline-danger" (click)="deleteInput()" >-</button>
+            </div>
+
+
+
+            <div *ngIf="CheckOn">
+
+                        <li *ngFor="let i of fakeArray; let index = index">   
+                                <label style="color:rgb(37, 187, 0);">AntOp: {{index}}</label> 
+                                 <input type="text" [(ngModel)]="realArray[index]" name="antOpID{{index}}" class="form-control" id="antOp{{index}}" aria-describedby="emailHelp" placeholder="Antwort-Option {{index}}">
+                        </li>
+        
+                        <button class="btn btn-outline-success" (click)="addInput()" >+</button>
+                        <button class="btn btn-outline-danger" (click)="deleteInput()" >-</button>
+             </div>
+
+          
+
+            <div *ngIf="TextCheckOn">
+
+                        <li *ngFor="let i of fakeArray; let index = index">   
+                                <label style="color:rgb(37, 187, 0);">AntOp: {{index}}</label> 
+                                 <input type="text" [(ngModel)]="realArray[index]" name="antOpID{{index}}" class="form-control" id="antOp{{index}}" aria-describedby="emailHelp" placeholder="Antwort-Option {{index}}">
+                        </li>
+        
+                        <button class="btn btn-outline-success" (click)="addInput()" >+</button>
+                        <button class="btn btn-outline-danger" (click)="deleteInput()" >-</button>
+                    </div>
+
+          
+
+
+            <div *ngIf="TextOn">
+
+                        <label style="color:rgb(37, 187, 0);">Hier muss ein Textfeld hin</label>
+            </div>
+
+            
+
+            <br> 
+            <br> 
+            <br> 
+
+
+            <div>
+                <h2 style="color:rgb(255, 0, 0);">Hinweis zur Frage:</h2>    
+                <input type="text" [(ngModel)]="frage.hinweis" name="hinweisID" class="form-control" id="hinweis" aria-describedby="emailHelp" placeholder="Hinweis eingeben">
+            </div>
+
+
+
+
+            <br> 
+
+
+
+
+            <!--
+            <div *ngIf="isEdit">
+                    <h1>Label it</h1>
+            </div>
+            -->
+            <br> 
+            <br> 
+
+    
+           
+    </div>
+
+    <button class="btn btn-outline-success" (click)="createFrage()" >Submit</button>
+
+    <!--<button class="btn btn-outline-success" (click)="deletePerson({dId: deleteId})" >Delete</button>
+    <button class="btn btn-outline-success" (click)="createPerson()" >Neue Person hinzufügen</button><br>-->
+
+    </form>
+<br>
+<br>
+<br>
+<br>
+
+<ul>
+
+<h2>Aktueller Fragenkatalog: </h2>
+<br>
+<table width="86%"   >   <!-- cellspacing="40"   style="border-spacing: 10px;"-->
+        <tr>    <td style="padding:20px"><b>Id:</b></td>
+                <td><b>Frage:</b></td>
+                <td><b>Kategorie: </b></td>
+                <td><b>Antwort-Typ:</b></td>
+                <td><b>Antwort-Optionen</b></td>
+                <td><b>Hinweis: </b></td>
+               
+        </tr>
+        
+        <tr  *ngFor="let c of data">
+                <td style="padding:6px" >{{c.id}}: </td>
+                <td>{{c.frage}}: </td>
+                <td>{{c.kategorie}} </td>
+                <td>{{c.antwortTyp}} </td>
+                <td>{{c.antwortOptionen}}</td>
+                <td>{{c.hinweis}}</td>
+        </tr>
+</table>
+
+
+
+
+
+
+
+<!--
+<table width="50%" cellspacing="2px" style="border-spacing: 5px;">
+<tr *ngFor="let c of data">
+        <td>{{c.id}}: </td>
+        <td>{{c.nachname}} </td>
+        <td> {{c.vorname}} </td>
+        <td> ({{c.geburtsdatum}})</td>
+</tr>
+</table>
+
+<button class="btn btn-success" (click)="createPerson()">Create</button>
+<br>
+<button class="btn btn-success" (click)="deletePerson()">Delete</button>
+<br>
+
+-->
+
+<!--<button class="btn btn-success" (click)="updatePerson()">Update</button>-->
+
+
+
+<!--
+<form>
+<div class="form-group">
+        <label for="exampleInputEmail1">DeleteID: {{deleteId}}</label>
+        <br>
+        <input type="text" [(ngModel)]="deleteId" name="deleteID" class="form-control" id="deleteP" aria-describedby="emailHelp" placeholder="Enter Id to delete">
+        <small id="emailHelp" class="form-text text-muted">The One to delete</small>
+        <br> 
+        <br>
+        <br>
+
+        <label for="exampleInputEmail2">Vorname: {{person.vorname}}</label>
+        <br>
+        <input type="text" [(ngModel)]="person.vorname" name="vornameID" class="form-control" id="vornameP" aria-describedby="emailHelp" placeholder="Dein Vorname">
+        <small id="emailHelp1" class="form-text text-muted">Vorname eintragen bitte</small>
+        <br> 
+
+        <label for="exampleInputEmail3">Nachname: {{person.nachname}}</label>
+        <br>
+        <input type="text" [(ngModel)]="person.nachname" name="nachnameID" class="form-control" id="nachnameP" aria-describedby="emailHelp" placeholder="Dein Nachname">
+        <small id="emailHelp2" class="form-text text-muted">Nachname eintragen bitte</small>
+        <br> 
+
+        <label for="exampleInputEmail4">Geburtsdatum: {{person.geburtsdatum}}</label>
+        <br>
+        <input type="text" [(ngModel)]="person.geburtsdatum" name="geburtsdatumID" class="form-control" id="geburtsdatumP" aria-describedby="emailHelp" placeholder="Dein Geburtsdatum">
+        <small id="emailHelp3" class="form-text text-muted">Geburtsdatum eintragen bitte</small>
+        <br> 
+</div>
+<button class="btn btn-outline-success" (click)="deletePerson({dId: deleteId})" >Delete</button>
+<button class="btn btn-outline-success" (click)="createPerson()" >Neue Person hinzufügen</button><br>
+<p>{{confirm}}<p>
+</form>
+
+-->
+
+
+
+<br>
+<br>
+<br>
+<br>
+
+
+<!--
+  <h3>Gewerbeanmeldung</h3>
+  <form >
+
+      <div>
+                <label for="name">Vor-Name: </label><br>
+                <input type="text" [(ngModel)]="kontakt.vorname" name="vorname">
+               
+      </div>
+      <div>
+          <label for="name">Nach-Name: </label><br>
+          <input type="text" [(ngModel)]="kontakt.nachname" name="nachname">
+      </div>
+      <div>
+              <label for="age">Alter: </label><br>
+              <input type="number" [(ngModel)]="kontakt.age" name="age">
+      </div>
+
+
+      <div>
+              <label for="street">Straße: </label><br>
+              <input type="text" [(ngModel)]="kontakt.street" name="street">
+      </div>
+      <div>
+              <label for="city">Stadt: </label><br>
+              <input type="text" [(ngModel)]="kontakt.city" name="city">
+      </div>
+      <div>
+              <label for="state">Bundesland: </label><br>
+              <input type="text" [(ngModel)]="kontakt.state" name="state">
+      </div>
+
+      <button class="btn btn-success" (click)="addKontaktData( { vorname: kontakt.vorname, nachname: kontakt.nachname, age: kontakt.age, street: kontakt.street, city: kontakt.city, state: kontakt.state} )">Submit</button>
+  
+</form>
+
+
+  <h1>Deine Daten: </h1>
+<ul>
+
+<li>Data: {{kontakt.vorname}},   {{getDimensionsByFind('Jonas')}}</li>
+
+<li *ngFor="let data of kontakt; let i = index">
+    {{i+1}}: {{ data.vorname }}, {{ data.nachname }}, {{ data.age }}, {{ data.street }}, {{ data.city }}, {{ data.state }} 
+</li>
+</ul>
+
+
+<form (submit)="addKontaktData(hobby.value)">
+<div>
+        <label for="hobby">Hobby:</label>
+        <input type="text" #hobby>
+        
+</div>
+
+-->
+
+<!--
+<form (submit)="addKontaktData(vorname.value)">
+<div>
+<label for="hobby">Hobby:</label>
+<input type="text" #hobby>
+
+</div>
+-->
