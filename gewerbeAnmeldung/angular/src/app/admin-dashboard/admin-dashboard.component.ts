@@ -13,7 +13,7 @@ export class AdminDashboardComponent implements OnInit {
 
   url = 'http://localhost:8080/frage';
   //url2 = 'kp';
-  deleteId: number = 1;
+  deleteId: number = -1;
   url2 = 'http://localhost:8080/frage/' + this.deleteId;
 
   public data: any;
@@ -34,6 +34,7 @@ TextOn: boolean = false;
 TextCheckOn: boolean = false;
 
 isEdit:boolean = false;
+deleteOn:boolean = false;
 
 
 antOpAnzahl: number = 1;
@@ -57,6 +58,7 @@ confirm: string = "";
 
 currentId:number = 0;
 
+check:boolean = false;
 
 
 
@@ -74,7 +76,7 @@ this.selectedValue = "Moin";
 
 this.antOpAnzahl = 1;
 
-
+this.frage = {id: 1, frage: "Frage eingeben", kategorie: "", antwortTyp: "", antwortOptionen:"", hinweis: ""};
 
 
 
@@ -95,9 +97,9 @@ this.api
 
 
 
+//id: Kategorien
 
-
-  toggleEdit(id: Kategorien){
+  toggleEdit(){
 
 
     if(this.frage.antwortTyp == "RadioButton"){
@@ -133,7 +135,7 @@ this.api
     
       //this.isEdit = !this.isEdit;
       //getted from event
-      console.log(id);
+     // console.log(id);
       console.log(this.frage.antwortTyp);
       //getted from binding
    
@@ -142,10 +144,74 @@ this.api
 
 
 
+  myClick(id:any): void {
+    
+    console.log("Click worked" + id.id);
+
+    this.deleteId = id.id;  
+    this.deleteOn = true;
+
+    this.frage.id = id.id;
+    this.frage.frage = id.frage;
+    this.frage.kategorie = id.kategorie;
+    this.frage.antwortTyp = id.antwortTyp;
+    this.frage.antwortOptionen = id.antwortOptionen;
+    this.toggleEdit();
+    
+
+    this.realArray = id.antwortOptionen.split(";");
+    
+
+    console.log(this.realArray);
+
+    this.fakeArray = new Array(this.realArray.length);
+    this.frage.hinweis = id.hinweis;
+
+
+
+    
+   
+   // var myTable = document.getElementById('tabId');
+   // myTable.style.backgroundColor = 'Red';
+
+
+  }
+    
+
+deleteFrage(): void{
+
+  this.url2 = 'http://localhost:8080/frage/' + this.deleteId;
+
+
+  this.api.deleteFrage(this.deleteId, this.url2).subscribe(data => data => {console.log(data);this.data = data;},err => {console.log(err);});
+
+
+
+  this.api
+  .getFrage(this.url)
+  .subscribe(
+    data => {
+      console.log(data);
+      this.data = data;
+    },
+    err => {
+      console.log(err);
+    }
+  );
+
+
+  this.deleteOn = false;
+  this.deleteId = -1;
+
+}
+ 
+
+
 
   
-  createFrage(): void {
-    
+createFrage(): void {
+
+ 
     this.api
       .getFrage(this.url)
       .subscribe(
@@ -158,9 +224,48 @@ this.api
         }
       );
 
+
+
+      //Change Frage
+      if(this.data.length > 0){
+
+        for(let t = 0; t < this.data.length; t++){
+          
+          if(this.data[t].id == this.frage.id){
+            
+            console.log("Entry changed!!!");
+
+           
+            for(let u2 = 0; u2 < this.realArray.length; u2++){
+
+              this.antOpString += this.realArray[u2];
+
+              if(u2 < this.realArray.length -1){
+                this.antOpString += ";";
+              }
+          }
+          this.frage.antwortOptionen = this.antOpString;
+
+
+
+          this.api.updateFrage(this.frage, this.url).subscribe( data => data=> {console.log(data);this.data = data;}, err => {console.log(err);});
+
+
+            this.check = true;
+
+          }
+
+        }
+
+      }
+
+
+
+
+if(!this.check){
       if(this.data.length > 0){  
-      this.currentId = this.data[this.data.length -1].id + 1;
-      this.frage.id = this.currentId;
+        this.currentId = this.data[this.data.length -1].id + 1;
+        this.frage.id = this.currentId;
       }else{
         this.frage.id = 1;
       }
@@ -179,12 +284,12 @@ this.api
     this.frage.antwortOptionen = this.antOpString;
     //this.person.id = this.data[this.data.length - 1].id + 1;
     this.api.createFrage(this.frage, this.url).subscribe( data => data=> {console.log(data);this.data = data;}, err => {console.log(err);});
+      
+
+}
 
 
-
-
-
-    this.confirm = this.frage.frage + "   --> wurde hinzugefügt";    
+   // this.confirm = this.frage.frage + "   --> wurde hinzugefügt";    
 
   };
 

@@ -1,4 +1,22 @@
 
+<head>
+        <style>
+                tr { background: rgb(255, 255, 255); } 
+                tr.alt { background: yellow; }
+                
+                #tabId:hover {background: rgb(255, 145, 71);}
+               #tabId {cursor: pointer;}
+             
+                #tabId { border: solid; }
+              
+        </style>
+
+
+        
+</head>
+
+
+
 <div style="text-align:center">
     <h3><b>Admin-Dashboard</b></h3>
     <img width="200" src="/assets/img/kielStadtLogo.jpg">
@@ -14,24 +32,24 @@
     <div class="form-group">
             <h2 style="color:rgb(255, 0, 0);">Frage:  </h2>
             <br>
-            <input type="text" [(ngModel)]="frage.frage" name="frageID" class="form-control" id="frageid" aria-describedby="emailHelp" placeholder="Formular-Frage">
+            <input type="text" [(ngModel)]="frage.frage" name="frageID" class="form-control" id="frageid" aria-describedby="emailHelp" placeholder="frage.frage">
            <!-- <small id="emailHelp" class="form-text text-muted">The One to delete</small> -->
             <br> 
             <br>
-            <br>
+         
     
             <h2 style="color:rgb(255, 0, 0);" for="exampleInputEmail2">Kategorie: </h2>
             <br>
             <!-- <input type="text" [(ngModel)]="person.vorname" name="vornameID" class="form-control" id="vornameP" aria-describedby="emailHelp" placeholder="Dein Vorname">-->
-            <select class="form-control" [(ngModel)]="frage.kategorie" name="typKat">  <!--ng-options="item for item in names"-->
+            <select class="form-control" [(ngModel)]="frage.kategorie" name="typKat">  <!--ng-options="item for item in names"     $event.target.value-->
                  <option *ngFor="let c of kat" [ngValue]="c.name" >{{c.name}}</option>
             </select>
             <br> 
             <br> 
-            <br> 
+            
 
             <h2 for="exampleInputEmail2" style="color:rgb(255, 0, 0);">Antwort-Typ: </h2>
-            <select class="form-control" [(ngModel)]="frage.antwortTyp" (change)=" toggleEdit($event.target.value)" name="typ">  <!--ng-options="item for item in names"-->
+            <select class="form-control" [(ngModel)]="frage.antwortTyp" (change)=" toggleEdit()" name="typ">  <!--ng-options="item for item in names"-->
                 <option *ngFor="let a of antwortMoeglichkeiten" [ngValue]="a.name" >{{a.name}}</option>
            </select>
            <!-- <p>Selected option: {{ selectedValue }}</p> -->
@@ -87,7 +105,7 @@
 
             <br> 
             <br> 
-            <br> 
+            
 
 
             <div>
@@ -100,22 +118,21 @@
 
             <br> 
 
-
-
-
             <!--
             <div *ngIf="isEdit">
                     <h1>Label it</h1>
             </div>
             -->
-            <br> 
-            <br> 
 
-    
            
     </div>
 
     <button class="btn btn-outline-success" (click)="createFrage()" >Submit</button>
+
+
+    <div *ngIf="deleteOn">
+        <button class="btn btn-outline-danger" (click)="deleteFrage()" >Delete</button>
+    </div>
 
     <!--<button class="btn btn-outline-success" (click)="deletePerson({dId: deleteId})" >Delete</button>
     <button class="btn btn-outline-success" (click)="createPerson()" >Neue Person hinzufügen</button><br>-->
@@ -124,13 +141,16 @@
 <br>
 <br>
 <br>
-<br>
+
 
 <ul>
 
 <h2>Aktueller Fragenkatalog: </h2>
 <br>
-<table width="86%"   >   <!-- cellspacing="40"   style="border-spacing: 10px;"-->
+
+<!--
+<table id="tableID" width="86%"   >   //cellspacing="40"   style="border-spacing: 10px;"
+        
         <tr>    <td style="padding:20px"><b>Id:</b></td>
                 <td><b>Frage:</b></td>
                 <td><b>Kategorie: </b></td>
@@ -139,20 +159,39 @@
                 <td><b>Hinweis: </b></td>
                
         </tr>
+</table> 
+
+
+onclick="this.style.backgroundColor = 'Green';"
+
+(click)="myClick(index)"
+-->
+<table id="tableFragen" width="86%"   >
+        <tr>    <th style="padding:20px"><b>Id:</b></th>
+                <th><b>Frage:</b></th>
+                <th><b>Kategorie: </b></th>
+                <th><b>Antwort-Typ:</b></th>
+                <th><b>Antwort-Optionen</b></th>
+                <th><b>Hinweis: </b></th>
+        </tr>
         
-        <tr  *ngFor="let c of data">
-                <td style="padding:6px" >{{c.id}}: </td>
-                <td>{{c.frage}}: </td>
+        <tr id="tabId" *ngFor="let c of data; let index = index" (click)="myClick(c)">
+                <td  style="padding:6px">{{c.id}} </td>
+                <td>{{c.frage}} </td>
                 <td>{{c.kategorie}} </td>
                 <td>{{c.antwortTyp}} </td>
-                <td>{{c.antwortOptionen}}</td>
-                <td>{{c.hinweis}}</td>
+                <td>{{c.antwortOptionen}} </td>
+                <td>{{c.hinweis}} </td>
+                
         </tr>
+
 </table>
 
 
 
 
+<!--  <table id="tabId"*ngFor="let c of data; let index = index" (click)="myClick(index)"  >
+        <tr id="row{{index}}" >-->
 
 
 
